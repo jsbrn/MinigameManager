@@ -27,7 +27,7 @@ public class TicketEconomy extends JavaPlugin {
 
         DatabaseManager.executeUpdate("create_table.sql");
         DatabaseManager.executeUpdate("insert_balance.sql", "eergerg", 3.0, 4.0, 5.0);
-        DatabaseManager.executeQuery("retrieve_player_balance.sql", "uuidOrName");
+
     }
 
     @Override

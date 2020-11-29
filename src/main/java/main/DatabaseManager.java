@@ -61,7 +61,7 @@ public class DatabaseManager {
                 else if (p instanceof Double)
                     stmt.setDouble(pIndex, (Double)p);
                 else
-                    throw new IllegalArgumentException("Ordered parameter "+pIndex+" is of an invalid type: "+p.getClass());
+                    throw new IllegalArgumentException("Ordered parameter "+pIndex+" is of an unsupported type: "+p.getClass());
             }
             return stmt;
         } catch (SQLException throwables) {

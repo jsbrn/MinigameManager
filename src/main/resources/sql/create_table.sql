@@ -1,6 +1,8 @@
-CREATE TABLE IF NOT EXISTS balances(
-    uuid VARCHAR(255) NOT NULL,
-    tickets DOUBLE,
-    credits DOUBLE,
-    coins DOUBLE
+CREATE TABLE IF NOT EXISTS profiles(
+    id INT NOT NULL AUTO_INCREMENT,
+    player_uuid VARCHAR(255) NOT NULL,
+    tickets DOUBLE NOT NULL DEFAULT 0,
+    credits DOUBLE NOT NULL DEFAULT 0,
+    coins DOUBLE NOT NULL DEFAULT 0,
+    paypal_email VARCHAR(255),
 )
