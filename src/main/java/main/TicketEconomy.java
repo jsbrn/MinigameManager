@@ -26,7 +26,6 @@ public class TicketEconomy extends JavaPlugin {
                 config.getString("mysql.password"));
 
         DatabaseManager.executeUpdate("create_table.sql");
-        DatabaseManager.executeUpdate("insert_balance.sql", "eergerg", 3.0, 4.0, 5.0);
 
     }
 

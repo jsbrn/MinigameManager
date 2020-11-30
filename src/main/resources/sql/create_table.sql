@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS profiles(
-    id INT NOT NULL AUTO_INCREMENT,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     player_uuid VARCHAR(255) NOT NULL,
     tickets DOUBLE NOT NULL DEFAULT 0,
     credits DOUBLE NOT NULL DEFAULT 0,
     coins DOUBLE NOT NULL DEFAULT 0,
-    paypal_email VARCHAR(255),
+    paypal_email VARCHAR(255)
 )

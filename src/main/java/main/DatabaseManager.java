@@ -1,13 +1,22 @@
 package main;
 
+import org.bukkit.plugin.java.JavaPlugin;
+
 import java.io.*;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class DatabaseManager {
 
     private static Connection connection;
+    private static Logger logger;
 
     public static boolean connect(String host, String database, String username, String password) {
+        
+        logger = JavaPlugin.getPlugin(TicketEconomy.class).getLogger();
+        
+        logger.info("Connecting to database "+database+" at "+host+" with user "+username+" (port 3306)...");
         String url = "jdbc:mysql://"+host+":3306/"+database;
         try { //We use a try catch to avoid errors, hopefully we don't get any.
             Class.forName("com.mysql.jdbc.Driver"); //this accesses Driver in jdbc.
@@ -29,6 +38,7 @@ public class DatabaseManager {
     }
 
     public static int executeUpdate(String file_name, Object... orderedParameters) {
+        logger.info("Executing update "+file_name+"...");
         try {
             PreparedStatement stmt = prepareStatement(file_name, orderedParameters);
             return stmt.executeUpdate();
@@ -39,6 +49,7 @@ public class DatabaseManager {
     }
 
     public static ResultSet executeQuery(String file_name, Object... orderedParameters) {
+        logger.info("Executing query "+file_name+"...");
         try {
             PreparedStatement stmt = prepareStatement(file_name, orderedParameters);
             return stmt.executeQuery();
@@ -73,11 +84,13 @@ public class DatabaseManager {
     }
 
     public static boolean disconnect() {
+        logger.info("Disconnecting from database...");
         // invoke on disable.
         try { //using a try catch to catch connection errors (like wrong sql password...)
             if (connection!=null && !connection.isClosed()){ //checking if connection isn't null to
                 //avoid receiving a nullpointer
                 connection.close(); //closing the connection field variable.
+                logger.info("Disconnected!");
             }
         } catch(Exception e) {
             e.printStackTrace();
