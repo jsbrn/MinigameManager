@@ -4,3 +4,7 @@ author: jsbrn
 main: main.TicketEconomy
 api-version: 1.16
 commands:
+  register:
+    description: Register your PayPal email.
+    usage: /register <your PayPal email address>
+    permission: ticketeconomy.register

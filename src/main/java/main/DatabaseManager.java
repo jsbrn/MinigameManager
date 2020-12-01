@@ -1,5 +1,6 @@
 package main;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -63,6 +64,7 @@ public class DatabaseManager {
         try {
             PreparedStatement stmt = connection.prepareStatement(read("sql/"+file_name, true));
             for (int i = 0; i < orderedParameters.length; i++) {
+                System.out.println("[DEBUG] i = "+i +" AND "+orderedParameters[i]);
                 int pIndex = i + 1;
                 Object p = orderedParameters[i];
                 if (p instanceof Integer)
@@ -71,8 +73,10 @@ public class DatabaseManager {
                     stmt.setString(pIndex, (String)p);
                 else if (p instanceof Double)
                     stmt.setDouble(pIndex, (Double)p);
+                else if (p instanceof Boolean)
+                    stmt.setBoolean(pIndex, (Boolean)p);
                 else
-                    throw new IllegalArgumentException("Ordered parameter "+pIndex+" is of an unsupported type: "+p.getClass());
+                    throw new IllegalArgumentException("Ordered parameter "+p+" (pIndex = "+pIndex+") is of an unsupported type.");
             }
             return stmt;
         } catch (SQLException throwables) {

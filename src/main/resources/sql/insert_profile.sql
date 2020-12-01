@@ -1,0 +1,1 @@
+INSERT INTO profiles (player_uuid) VALUES (?)

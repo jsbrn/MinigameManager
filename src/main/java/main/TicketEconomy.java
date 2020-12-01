@@ -1,8 +1,11 @@
 package main;
 
+import commands.PaypalRegisterCommand;
+import listeners.PlayerJoinListener;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import util.PlayerProfiles;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,7 +28,15 @@ public class TicketEconomy extends JavaPlugin {
                 config.getString("mysql.username"),
                 config.getString("mysql.password"));
 
-        DatabaseManager.executeUpdate("create_table.sql");
+        DatabaseManager.executeUpdate("create_profiles_table.sql");
+
+        PlayerProfiles.loadPlayerProfiles();
+
+        //register commands
+        getCommand("register").setExecutor(new PaypalRegisterCommand());
+
+        //register event listeners
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
 
     }
 

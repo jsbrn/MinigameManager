@@ -1,0 +1,1 @@
+UPDATE profiles SET premium = ?, tickets = ?, credits = ?, coins = ?, paypal_email = ? WHERE player_uuid = ?;
