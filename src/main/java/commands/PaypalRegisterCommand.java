@@ -23,11 +23,10 @@ public class PaypalRegisterCommand implements CommandExecutor {
                             ChatColor.GREEN+"You have successfully registered "+profile.getPaypalEmail()+" as your Paypal email. " +
                             "Use the Shop menu to cash out your credits at any time.");
                     profile.save();
-                    return true;
                 } else {
                     commandSender.sendMessage(ChatColor.YELLOW+"The email you entered is not a valid address. Did you misspell it?");
-                    return true;
                 }
+                return true;
             }
         } else {
             commandSender.sendMessage(ChatColor.RED+"This command can only be ran as a player.");

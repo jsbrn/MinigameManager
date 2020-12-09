@@ -3,6 +3,7 @@ version: 1.0.0
 author: jsbrn
 main: main.TicketEconomy
 api-version: 1.16
+depend: [Multiverse-Core]
 commands:
   register:
     description: Register your PayPal email.
