@@ -14,7 +14,7 @@ import util.PlayerProfiles;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class PaypalRegisterCommand implements CommandExecutor {
+public class TestCommand implements CommandExecutor {
 
     public boolean onCommand(final CommandSender commandSender, Command command, String label, String[] args) {
         TimerTask delayedTeleport = new TimerTask() {

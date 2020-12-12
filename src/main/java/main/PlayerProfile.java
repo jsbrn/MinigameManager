@@ -2,6 +2,7 @@ package main;
 
 import org.bukkit.entity.Player;
 import util.CoinTransactionReason;
+import util.DatabaseManager;
 
 import java.util.UUID;
 

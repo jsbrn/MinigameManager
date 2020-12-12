@@ -1,11 +1,10 @@
-package main;
+package util;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+import main.TicketEconomy;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.sql.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DatabaseManager {
