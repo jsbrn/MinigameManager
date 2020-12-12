@@ -16,15 +16,16 @@ import java.util.TimerTask;
 
 public class PaypalRegisterCommand implements CommandExecutor {
 
-    public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
+    public boolean onCommand(final CommandSender commandSender, Command command, String label, String[] args) {
         TimerTask delayedTeleport = new TimerTask() {
             private int seconds = 5;
             @Override
             public void run() {
-                if (seconds-- > 0) {
-                    Bukkit.broadcastMessage("Starting in "+seconds+"...");
+                if (seconds > 0) {
+                    commandSender.sendMessage(ChatColor.YELLOW+"Starting in "+ChatColor.RED+seconds+ChatColor.YELLOW+"...");
+                    seconds--;
                 } else {
-                    Bukkit.broadcastMessage("Now!");
+                    commandSender.sendMessage(ChatColor.GREEN+"Now!");
                     cancel();
                 }
             }

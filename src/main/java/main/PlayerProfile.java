@@ -1,7 +1,7 @@
 package main;
 
 import org.bukkit.entity.Player;
-import util.TicketTransactionReason;
+import util.CoinTransactionReason;
 
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class PlayerProfile {
         return credits;
     }
 
-    public void addTickets(int amount, TicketTransactionReason reason, Player executor) {
+    public void addTickets(int amount, CoinTransactionReason reason, Player executor) {
 
     }
 

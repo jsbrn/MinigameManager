@@ -1,6 +1,6 @@
 package util;
 
-public enum TicketTransactionReason {
+public enum CoinTransactionReason {
     PURCHASE,
     PLAY_TIME_REWARD,
     ENTERED_MATCH,
