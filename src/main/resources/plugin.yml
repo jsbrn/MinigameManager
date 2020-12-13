@@ -1,11 +1,23 @@
-name: TicketEconomy
+name: GameManager
 version: 1.0.0
 author: jsbrn
-main: main.TicketEconomy
+main: main.GameManagerPlugin
 api-version: 1.16
 depend: [Multiverse-Core]
 commands:
-  register:
-    description: Register your PayPal email.
-    usage: /register <your PayPal email address>
-    permission: ticketeconomy.register
+  test:
+    description: Developer command, not for public use.
+    usage: /test
+    permission: gamemanager.test
+  creategame:
+    description: Create a game instance for players to reserve spots in.
+    usage: /creategame <map>
+    permission: gamemanager.creategame
+  joingame:
+    description: Join an existing game instance that has not started yet.
+    usage: /joingame <name>
+    permission: gamemanager.joingame
+  startgame:
+    description: Start a game instance (teleports all registered players to the map).
+    usage: /startgame <name>
+    permission: gamemanager.startgame

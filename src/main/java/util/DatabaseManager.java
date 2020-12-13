@@ -1,6 +1,6 @@
 package util;
 
-import main.TicketEconomy;
+import main.GameManagerPlugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -14,7 +14,7 @@ public class DatabaseManager {
 
     public static boolean connect(String host, String database, String username, String password) {
         
-        logger = JavaPlugin.getPlugin(TicketEconomy.class).getLogger();
+        logger = JavaPlugin.getPlugin(GameManagerPlugin.class).getLogger();
         
         logger.info("Connecting to database "+database+" at "+host+" with user "+username+" (port 3306)...");
         String url = "jdbc:mysql://"+host+":3306/"+database;

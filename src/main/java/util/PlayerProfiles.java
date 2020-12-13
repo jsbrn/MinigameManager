@@ -1,7 +1,7 @@
 package util;
 
 import main.PlayerProfile;
-import main.TicketEconomy;
+import main.GameManagerPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -44,7 +44,7 @@ public class PlayerProfiles {
                 );
                 PLAYER_PROFILES.put(playerUUID.toString(), profile);
             }
-            JavaPlugin.getPlugin(TicketEconomy.class).getLogger().info("Successfully loaded "+results.getFetchSize()+" profiles.");
+            JavaPlugin.getPlugin(GameManagerPlugin.class).getLogger().info("Successfully loaded "+results.getFetchSize()+" profiles.");
             return true;
         } catch (SQLException throwables) {
             throwables.printStackTrace();

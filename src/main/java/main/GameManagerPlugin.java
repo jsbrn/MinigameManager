@@ -1,5 +1,8 @@
 package main;
 
+import commands.CreateGameInstanceCommand;
+import commands.JoinGameInstanceCommand;
+import commands.StartGameInstanceCommand;
 import commands.TestCommand;
 import listeners.PlayerJoinListener;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,7 +13,7 @@ import util.PlayerProfiles;
 
 import java.sql.Connection;
 
-public class TicketEconomy extends JavaPlugin {
+public class GameManagerPlugin extends JavaPlugin {
 
     //Connection vars
     static Connection connection; //This is the variable we will use to connect to database
@@ -32,6 +35,9 @@ public class TicketEconomy extends JavaPlugin {
 
         //register commands
         getCommand("test").setExecutor(new TestCommand());
+        getCommand("creategame").setExecutor(new CreateGameInstanceCommand());
+        getCommand("joingame").setExecutor(new JoinGameInstanceCommand());
+        getCommand("startgame").setExecutor(new StartGameInstanceCommand());
 
         //register event listeners
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
