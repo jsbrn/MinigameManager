@@ -3,6 +3,7 @@ package util;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import main.GameInstance;
+import main.GameManagerPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -45,6 +46,8 @@ public class GameManager {
                     player.teleport(gi.getWorld().getSpawnLocation());
                 }
             }
+            //register the game listeners
+            Bukkit.getServer().getPluginManager().registerEvents(gi, GameManagerPlugin.getInstance());
             gi.start();
             return true;
         }

@@ -16,7 +16,8 @@ import java.util.UUID;
 
 public abstract class GameInstance implements Listener {
 
-    private ArrayList<UUID> registeredPlayers, joinedPlayers;
+    private ArrayList<UUID> registeredPlayers;
+    private ArrayList<Player> joinedPlayers;
     private final String map, name;
     private int minimumPlayerCount, maximumPlayerCount;
     private boolean started, finished, cancelled;
@@ -30,11 +31,17 @@ public abstract class GameInstance implements Listener {
         this.minimumPlayerCount = minPlayers;
         this.maximumPlayerCount = maxPlayers;
         this.registeredPlayers = new ArrayList<UUID>();
-        this.joinedPlayers = new ArrayList<UUID>();
+        this.joinedPlayers = new ArrayList<Player>();
     }
 
     public void start() {
         started = true;
+        for (UUID u: registeredPlayers) {
+            Player p = Bukkit.getServer().getPlayer(u);
+            if (p != null) {
+                joinedPlayers.add(p);
+            }
+        }
         onStart();
     }
 
@@ -73,7 +80,7 @@ public abstract class GameInstance implements Listener {
         return map;
     }
 
-    public ArrayList<UUID> getActivePlayers() {
+    public ArrayList<Player> getActivePlayers() {
         return joinedPlayers;
     }
 
@@ -88,10 +95,8 @@ public abstract class GameInstance implements Listener {
         return true;
     }
 
-    public @NotNull BukkitTask schedule(BukkitRunnable r, int delay, int interval) {
-        Plugin this_ = JavaPlugin.getPlugin(GameManagerPlugin.class);
-        System.out.println("Plugin: "+this_);
-        return Bukkit.getServer().getScheduler().runTaskTimer(this_, r, delay, interval);
+    public boolean isFinished() {
+        return finished;
     }
 
 }
