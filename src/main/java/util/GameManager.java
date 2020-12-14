@@ -38,9 +38,10 @@ public class GameManager {
             GameInstance gi = GAME_INSTANCES.get(name);
             //teleport all players to the world
             //trigger the start event
-            for (UUID uuid: gi.getActivePlayers()) {
+            for (UUID uuid: gi.getRegisteredPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
                 if (player != null) {
+                    //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mvtp "+player.getName()+" "+gi.getWorldName());
                     player.teleport(gi.getWorld().getSpawnLocation());
                 }
             }

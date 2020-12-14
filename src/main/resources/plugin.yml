@@ -1,4 +1,4 @@
-name: GameManager
+name: MinigameManager
 version: 1.0.0
 author: jsbrn
 main: main.GameManagerPlugin

@@ -4,6 +4,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -81,6 +86,12 @@ public abstract class GameInstance implements Listener {
         if (registeredPlayers.size() >= maximumPlayerCount) return false;
         registeredPlayers.add(p.getUniqueId());
         return true;
+    }
+
+    public @NotNull BukkitTask schedule(BukkitRunnable r, int delay, int interval) {
+        Plugin this_ = JavaPlugin.getPlugin(GameManagerPlugin.class);
+        System.out.println("Plugin: "+this_);
+        return Bukkit.getServer().getScheduler().runTaskTimer(this_, r, delay, interval);
     }
 
 }

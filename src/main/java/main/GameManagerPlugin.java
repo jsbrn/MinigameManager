@@ -7,6 +7,7 @@ import commands.TestCommand;
 import listeners.PlayerJoinListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.permissions.Permission;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.DatabaseManager;
 import util.PlayerProfiles;
@@ -47,6 +48,10 @@ public class GameManagerPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         DatabaseManager.disconnect();
+    }
+
+    public static Plugin getInstance() {
+        return JavaPlugin.getPlugin(GameManagerPlugin.class);
     }
 
 }

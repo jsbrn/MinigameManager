@@ -1,8 +1,12 @@
 package games;
 
 import main.GameInstance;
+import main.GameManagerPlugin;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.scheduler.BukkitRunnable;
+import util.GameManager;
 
 import java.awt.*;
 import java.util.Timer;
@@ -21,9 +25,7 @@ public class RisingLavaGameInstance extends GameInstance {
         this.maxLavaHeight = 104;
     }
 
-    private Timer lavaTimer = new Timer(true);
-    private TimerTask liftLava = new TimerTask() {
-        @Override
+    private BukkitRunnable liftLava = new BukkitRunnable() {
         public void run() {
             World w = getWorld();
             lavaHeight++;
@@ -32,11 +34,12 @@ public class RisingLavaGameInstance extends GameInstance {
                     w.getBlockAt(-6 + i, lavaHeight, -6 + j).setType(Material.LAVA);
                 }
             }
+            if (lavaHeight >= maxLavaHeight) this.cancel();
         }
     };
 
     public void onStart() {
-        lavaTimer.scheduleAtFixedRate(liftLava, 1000, 1000);
+        liftLava.runTaskTimer(GameManagerPlugin.getInstance(), 20*5, 20*5);
     }
 
     public boolean onNext() {
@@ -44,11 +47,11 @@ public class RisingLavaGameInstance extends GameInstance {
     }
 
     public void onStop() {
-        lavaTimer.cancel();
+        liftLava.cancel();
     }
 
     public void onFinish() {
-        lavaTimer.cancel();
+        liftLava.cancel();
     }
 
 }
