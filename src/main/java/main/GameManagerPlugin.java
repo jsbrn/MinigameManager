@@ -1,10 +1,16 @@
 package main;
 
+import com.onarandombox.MultiverseCore.MVWorld;
+import com.onarandombox.MultiverseCore.MultiverseCore;
+import com.onarandombox.MultiverseCore.api.MVWorldManager;
+import com.onarandombox.MultiverseCore.api.MultiverseWorld;
+import com.onarandombox.MultiverseCore.utils.FileUtils;
 import commands.CreateGameInstanceCommand;
 import commands.JoinGameInstanceCommand;
 import commands.StartGameInstanceCommand;
 import commands.TestCommand;
 import listeners.PlayerJoinListener;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
@@ -12,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import util.DatabaseManager;
 import util.PlayerProfiles;
 
+import java.io.File;
 import java.sql.Connection;
 
 public class GameManagerPlugin extends JavaPlugin {
@@ -48,6 +55,28 @@ public class GameManagerPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         DatabaseManager.disconnect();
+
+        MVWorldManager worldManager = JavaPlugin.getPlugin(MultiverseCore.class).getMVWorldManager();
+        File root = new File(System.getProperty("user.dir"));
+
+        System.out.println("Root folder: "+root.getAbsolutePath());
+
+        for (MultiverseWorld w: worldManager.getMVWorlds()) {
+            String name = w.getName();
+            if (name.startsWith("game_")) {
+                getLogger().info("Found game instance "+name+" in Multiverse config");
+                if (worldManager.removeWorldFromConfig(w.getName())) {
+                    getLogger().info("Deleted game "+name+" from Multiverse config");
+                }
+                File gameInstanceFolder = new File(root.getAbsolutePath()+"/"+name);
+                if (gameInstanceFolder.exists()) {
+                    if (FileUtils.deleteFolder(gameInstanceFolder)) {
+                        getLogger().info("Deleted game folder "+gameInstanceFolder.getAbsolutePath());
+                    }
+                }
+            }
+        }
+
     }
 
     public static Plugin getInstance() {

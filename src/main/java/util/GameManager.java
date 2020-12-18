@@ -8,8 +8,10 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -39,19 +41,34 @@ public class GameManager {
 
     public static boolean startGameInstance(String name) {
         if (GAME_INSTANCES.get(name) != null) {
-            GameInstance gi = GAME_INSTANCES.get(name);
-            //teleport all players to the world
-            //trigger the start event
-            for (UUID uuid: gi.getRegisteredPlayers()) {
-                Player player = Bukkit.getPlayer(uuid);
-                if (player != null) {
-                    //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mvtp "+player.getName()+" "+gi.getWorldName());
-                    player.teleport(gi.getWorld().getSpawnLocation());
+            final GameInstance gi = GAME_INSTANCES.get(name);
+
+            BukkitTimerTask showCountdown = new BukkitTimerTask(0, 1000) {
+                private int countdown = 5;
+                public void run() {
+                    //teleport all players to the world
+                    //trigger the start event
+                    for (UUID uuid : gi.getRegisteredPlayers()) {
+                        Player player = Bukkit.getPlayer(uuid);
+                        if (player != null) {
+                            if (countdown <= 0) {
+                                //register the game listeners
+                                player.teleport(gi.getWorld().getSpawnLocation());
+                            } else {
+                                player.sendTitle(ChatColor.YELLOW+"Starting in "+ChatColor.RED+countdown+ChatColor.YELLOW+"...", "", 0, 0, 20);
+                            }
+                        }
+
+                    }
+                    if (countdown <= 0) {
+                        stop();
+                        Bukkit.getServer().getPluginManager().registerEvents(gi, GameManagerPlugin.getInstance());
+                        gi.start();
+                    }
+                    countdown--;
                 }
-            }
-            //register the game listeners
-            Bukkit.getServer().getPluginManager().registerEvents(gi, GameManagerPlugin.getInstance());
-            gi.start();
+            };
+            showCountdown.start();
             return true;
         }
         return false;
