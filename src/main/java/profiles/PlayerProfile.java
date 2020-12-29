@@ -1,7 +1,6 @@
-package main;
+package profiles;
 
 import org.bukkit.entity.Player;
-import util.CoinTransactionReason;
 import util.DatabaseManager;
 
 import java.util.UUID;

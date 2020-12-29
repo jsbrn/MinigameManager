@@ -1,9 +1,6 @@
 package games;
 
-import main.GameInstance;
 import main.GameManagerPlugin;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
@@ -25,7 +22,7 @@ public class WaterDropGameInstance extends GameInstance {
     private final Random random;
 
     public WaterDropGameInstance() {
-        super("cod_arena", 5, 16);
+        super(MinigameMode.WATER_DROP, "cod_arena", 5, 16);
         this.dropHeight = 129;
         this.dropInterval = 20;
         this.amountPerDrop = 2;

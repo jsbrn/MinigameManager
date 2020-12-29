@@ -1,9 +1,9 @@
-package util;
+package profiles;
 
-import main.PlayerProfile;
 import main.GameManagerPlugin;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import util.DatabaseManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

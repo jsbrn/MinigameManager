@@ -1,6 +1,5 @@
 package games;
 
-import main.GameInstance;
 import main.GameManagerPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -9,20 +8,17 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import util.GameManager;
 
 import java.awt.*;
-import java.util.Timer;
-import java.util.TimerTask;
 
-public class RisingLavaGameInstance extends GameInstance {
+public class HelltowerGameInstance extends GameInstance {
 
     private Rectangle lavaBounds;
     private int lavaHeight, finishHeight;
     private final int maxLavaHeight;
 
-    public RisingLavaGameInstance() {
-        super("rising_lava", 2, 16);
+    public HelltowerGameInstance() {
+        super(MinigameMode.PARKOUR_RACE, "rising_lava", 2, 16);
         this.lavaBounds = new Rectangle(-6, -6, 13, 13);
         this.lavaHeight = 64;
         this.maxLavaHeight = 104;

@@ -1,6 +1,5 @@
 package main;
 
-import com.onarandombox.MultiverseCore.MVWorld;
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
@@ -10,13 +9,11 @@ import commands.JoinGameInstanceCommand;
 import commands.StartGameInstanceCommand;
 import commands.TestCommand;
 import listeners.PlayerJoinListener;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.DatabaseManager;
-import util.PlayerProfiles;
+import profiles.PlayerProfiles;
 
 import java.io.File;
 import java.sql.Connection;

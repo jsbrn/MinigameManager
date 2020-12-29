@@ -1,8 +1,6 @@
-package util;
+package profiles;
 
 public enum CreditTransactionReason {
     GAME_WON,
-    GAME_LOST,
-    CASH_OUT,
-    SPENT
+    PAYOUT
 }

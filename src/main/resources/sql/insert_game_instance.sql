@@ -1,0 +1,1 @@
+INSERT INTO game_instances (player_uuid) VALUES (?)
