@@ -13,11 +13,14 @@ commands:
     description: Create a game instance for players to reserve spots in.
     usage: /creategame <map>
     permission: gamemanager.creategame
+    aliases: [cg]
   joingame:
     description: Join an existing game instance that has not started yet.
     usage: /joingame <name>
     permission: gamemanager.joingame
+    aliases: [jg]
   startgame:
     description: Start a game instance (teleports all registered players to the map).
     usage: /startgame <name>
     permission: gamemanager.startgame
+    aliases: [sg]

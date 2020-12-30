@@ -2,14 +2,16 @@ package games;
 
 import com.onarandombox.MultiverseCore.MultiverseCore;
 import com.onarandombox.MultiverseCore.api.MVWorldManager;
-import games.GameInstance;
 import main.GameManagerPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.BukkitTimerTask;
+import util.DatabaseManager;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
@@ -23,12 +25,13 @@ public class GameManager {
     }
 
     public static boolean createGameInstance(GameInstance game, Date start) {
-        if (GAME_INSTANCES.containsKey(game.getName())) return false;
+        if (GAME_INSTANCES.containsKey(game.getID())) return false;
         MVWorldManager worldManager = JavaPlugin.getPlugin(MultiverseCore.class).getMVWorldManager();
-        if (worldManager.cloneWorld(game.getMap(), game.getWorldName())) {
+        if (worldManager.cloneWorld("map_"+game.getMap(), game.getWorldName())) {
             worldManager.getMVWorld(game.getWorldName()).setKeepSpawnInMemory(false);
             if (start != null) game.setStartDate(start);
-            GAME_INSTANCES.put(game.getName(), game);
+            GAME_INSTANCES.put(game.getID(), game);
+            DatabaseManager.executeUpdate("insert_game_instance.sql", game.getMap(), game.getID(), game.getStartDate());
             return true;
         }
         return false;
@@ -76,6 +79,22 @@ public class GameManager {
             return true;
         }
         return false;
+    }
+
+    public static void loadAllGameInstances() {
+
+        ResultSet results = DatabaseManager.executeQuery("select_all_pending_games.sql");
+
+        try {
+            while (results.next()) {
+                String map = results.getString("map");
+                GameInstance instance = MinigameMap.valueOf(map).getGameInstance();
+                instance.from(results);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
     }
 
 }

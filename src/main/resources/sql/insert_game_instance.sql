@@ -1,1 +1,1 @@
-INSERT INTO game_instances (player_uuid) VALUES (?)
+INSERT INTO game_instances (map, name, start_date) VALUES (?, ?, ?)

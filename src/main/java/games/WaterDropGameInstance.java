@@ -22,7 +22,7 @@ public class WaterDropGameInstance extends GameInstance {
     private final Random random;
 
     public WaterDropGameInstance() {
-        super(MinigameMode.WATER_DROP, "cod_arena", 5, 16);
+        super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16);
         this.dropHeight = 129;
         this.dropInterval = 20;
         this.amountPerDrop = 2;

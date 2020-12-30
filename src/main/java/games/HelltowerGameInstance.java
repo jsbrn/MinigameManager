@@ -18,7 +18,7 @@ public class HelltowerGameInstance extends GameInstance {
     private final int maxLavaHeight;
 
     public HelltowerGameInstance() {
-        super(MinigameMode.PARKOUR_RACE, "rising_lava", 2, 16);
+        super(MinigameMode.PARKOUR_RACE, MinigameMap.HELL_TOWER, 2, 16);
         this.lavaBounds = new Rectangle(-6, -6, 13, 13);
         this.lavaHeight = 64;
         this.maxLavaHeight = 104;
@@ -59,10 +59,10 @@ public class HelltowerGameInstance extends GameInstance {
         if (isFinished()) return;
         if (moveEvent.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
         if (!moveEvent.getPlayer().getLocation().getWorld().equals(getWorld())) return;
-        if (moveEvent.getPlayer().getLocation().getBlockY() >= 109) {
+        if (moveEvent.getPlayer().getLocation().getBlockY() >= finishHeight) {
             finish();
             for (Player p: getActivePlayers()) {
-                p.sendTitle(ChatColor.YELLOW + moveEvent.getPlayer().getName() + " won!", "Type /lobby to exit the game.", 0, 20 * 5, 20);
+                p.sendTitle(ChatColor.YELLOW + moveEvent.getPlayer().getName() + " won!", "Type /leave to exit the game.", 0, 20 * 5, 20);
                 if (!p.equals(moveEvent.getPlayer())) p.setGameMode(GameMode.SPECTATOR);
             }
         }
@@ -76,7 +76,7 @@ public class HelltowerGameInstance extends GameInstance {
         if (p.getHealth() - event.getFinalDamage() <= 0) {
             event.setCancelled(true);
             p.sendTitle(ChatColor.RED + "You Died!", "Better luck next time.", 0, 20*5, 20);
-            p.sendMessage(ChatColor.GRAY+"Use your navigator to go back to the lobby.");
+            p.sendMessage(ChatColor.GRAY+"Type /leave to exit the game.");
             p.setGameMode(GameMode.SPECTATOR);
         }
     }

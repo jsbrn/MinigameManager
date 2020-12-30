@@ -14,6 +14,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.DatabaseManager;
 import profiles.PlayerProfiles;
+import util.Notifier;
 
 import java.io.File;
 import java.sql.Connection;
@@ -46,6 +47,8 @@ public class GameManagerPlugin extends JavaPlugin {
 
         //register event listeners
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+
+        Notifier.init();
 
     }
 

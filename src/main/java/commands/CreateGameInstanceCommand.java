@@ -1,16 +1,12 @@
 package commands;
 
-import games.HelltowerGameInstance;
-import games.WaterDropGameInstance;
-import games.GameInstance;
-import net.md_5.bungee.api.chat.TextComponent;
+import games.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import games.GameManager;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,10 +16,8 @@ public class CreateGameInstanceCommand implements CommandExecutor {
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length <= 0) return false;
-        GameInstance instance = null;
 
-        if (strings[0].equals("hell_tower")) instance = new HelltowerGameInstance();
-        if (strings[0].equals("water_dtop")) instance = new WaterDropGameInstance();
+        GameInstance instance = MinigameMap.valueOf(strings[0].toUpperCase()).getGameInstance();
 
         if (instance == null) {
             commandSender.sendMessage(ChatColor.RED+"Sorry, that game mode does not exist!");
@@ -45,12 +39,15 @@ public class CreateGameInstanceCommand implements CommandExecutor {
         commandSender.sendMessage("Creating new "+instance.getMode().getName()+" game...");
 
         if (GameManager.createGameInstance(instance, startDate)) {
+            commandSender.sendMessage(ChatColor.GREEN+"Successfully created game!");
             for (Player p: Bukkit.getOnlinePlayers()) {
                 if (startDate == null) {
-                    p.sendMessage(ChatColor.YELLOW+"A "+instance.getMode().getName()+" game is about to start! Do ");
+                    p.sendMessage(ChatColor.YELLOW+"A "+instance.getMode().getName()+" game is about to start! " +
+                            "Do "+ChatColor.GREEN+"/jg "+instance.getID()+ChatColor.YELLOW+" to reserve a spot!");
+                    //TODO: ONLY GOLD MEMBERS CAN SPECTATE
+                    p.sendMessage(ChatColor.GRAY+"(Do "+ChatColor.BOLD+"/spec "+instance.getID()+ChatColor.RESET+" to spectate)");
                 }
             }
-            commandSender.sendMessage(ChatColor.GREEN+"Success! Do "+ChatColor.YELLOW+"/join "+instance.getName()+ChatColor.GREEN+" to reserve your spot!");
         } else {
             commandSender.sendMessage(ChatColor.RED+"Failed to create game!");
         }

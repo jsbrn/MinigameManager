@@ -6,6 +6,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import util.DatabaseManager;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.Random;
@@ -15,19 +17,22 @@ public abstract class GameInstance implements Listener {
 
     private ArrayList<UUID> registeredPlayers;
     private ArrayList<Player> joinedPlayers;
-    private final String map, name;
+    private final String map, id;
     private int minimumPlayerCount, maximumPlayerCount;
     private boolean started, finished, cancelled;
     private Date startDate;
+
     private MinigameMode mode;
+
+    private String winner;
 
     private int stage = 0;
 
-    public GameInstance(MinigameMode mode, String map, int minPlayers, int maxPlayers) {
+    protected GameInstance(MinigameMode mode, MinigameMap map, int minPlayers, int maxPlayers) {
         Random r = new Random();
-        this.map = map;
+        this.map = map.getWorldName();
         this.mode = mode;
-        this.name = mode.getAcronym().toUpperCase()+(100+r.nextInt(900));
+        this.id = mode.getAcronym().toUpperCase()+(100+r.nextInt(900));
         this.minimumPlayerCount = minPlayers;
         this.maximumPlayerCount = maxPlayers;
         this.registeredPlayers = new ArrayList<UUID>();
@@ -55,8 +60,14 @@ public abstract class GameInstance implements Listener {
         onNext();
     }
 
+    public long getStartDate() { return startDate.getTime(); }
+
     public void setStartDate(java.util.Date date) {
         startDate = new java.sql.Date(date.getTime());
+    }
+
+    public void setWinner(String username) {
+        this.winner = username;
     }
 
     public MinigameMode getMode() {
@@ -73,15 +84,15 @@ public abstract class GameInstance implements Listener {
     public abstract void onFinish(); //things to do when the game finishes
 
     public final String getWorldName() {
-        return "game_"+ name;
+        return "game_"+ id;
     }
 
     public final World getWorld() {
         return Bukkit.getWorld(getWorldName());
     }
 
-    public final String getName() {
-        return name;
+    public final String getID() {
+        return id;
     }
 
     public String getMap() {
@@ -108,7 +119,24 @@ public abstract class GameInstance implements Listener {
     }
 
     public int save() {
-        return DatabaseManager.executeUpdate("");
+        return DatabaseManager.executeUpdate("update_game_instance.sql", startDate, started, finished, cancelled, winner);
+    }
+
+    public boolean from(ResultSet row) throws SQLException {
+        setStartDate(row.getDate("start_date"));
+        winner = row.getString("winner");
+        started = row.getBoolean("started");
+        finished = row.getBoolean("finished");
+        cancelled = row.getBoolean("cancelled");
+        return true;
+    }
+
+    private String generateRandomName() {
+        String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder random = new StringBuilder();
+        for (int i = 0; i < 6; i++)
+            random.append(chars.charAt(new Random().nextInt(chars.length())));
+        return random.toString();
     }
 
 }
