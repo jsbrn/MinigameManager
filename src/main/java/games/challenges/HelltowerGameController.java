@@ -1,5 +1,8 @@
-package games;
+package games.challenges;
 
+import games.GameController;
+import games.MinigameMap;
+import games.MinigameMode;
 import main.GameManagerPlugin;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
@@ -8,16 +11,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.awt.*;
 
-public class HelltowerGameInstance extends GameInstance {
+public class HelltowerGameController extends GameController {
 
     private Rectangle lavaBounds;
     private int lavaHeight, finishHeight;
     private final int maxLavaHeight;
 
-    public HelltowerGameInstance() {
+    public HelltowerGameController() {
         super(MinigameMode.PARKOUR_RACE, MinigameMap.HELL_TOWER, 2, 16);
         this.lavaBounds = new Rectangle(-6, -6, 13, 13);
         this.lavaHeight = 64;
@@ -42,6 +49,17 @@ public class HelltowerGameInstance extends GameInstance {
         liftLava.runTaskTimer(GameManagerPlugin.getInstance(), 20*5, 20*5);
     }
 
+    private void createScoreboard() {
+        ScoreboardManager manager = Bukkit.getScoreboardManager();
+        Scoreboard board = manager.getNewScoreboard();
+        Objective objective = board.registerNewObjective("stealgold", "dummy");
+        objective.setDisplayName("Steal the Gold");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+        objective.getScore("Gold blocks:").setScore(18);
+        for (Player p: getWorld().getPlayers())
+            p.setScoreboard(board);
+    }
+
     public boolean onNext() {
         return false;
     }
@@ -54,6 +72,14 @@ public class HelltowerGameInstance extends GameInstance {
         liftLava.cancel();
     }
 
+    public void onJoin(Player p) {
+
+    }
+
+    public void onLeave(Player p) {
+
+    }
+
     @EventHandler
     public void onPlayerMoveToRooftop(PlayerMoveEvent moveEvent) {
         if (isFinished()) return;
@@ -61,7 +87,7 @@ public class HelltowerGameInstance extends GameInstance {
         if (!moveEvent.getPlayer().getLocation().getWorld().equals(getWorld())) return;
         if (moveEvent.getPlayer().getLocation().getBlockY() >= finishHeight) {
             finish();
-            for (Player p: getActivePlayers()) {
+            for (Player p: getWorld().getPlayers()) {
                 p.sendTitle(ChatColor.YELLOW + moveEvent.getPlayer().getName() + " won!", "Type /leave to exit the game.", 0, 20 * 5, 20);
                 if (!p.equals(moveEvent.getPlayer())) p.setGameMode(GameMode.SPECTATOR);
             }

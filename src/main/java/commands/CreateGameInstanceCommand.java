@@ -17,7 +17,7 @@ public class CreateGameInstanceCommand implements CommandExecutor {
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if (strings.length <= 0) return false;
 
-        GameInstance instance = MinigameMap.valueOf(strings[0].toUpperCase()).getGameInstance();
+        GameController instance = MinigameMap.valueOf(strings[0].toUpperCase()).createGameController();
 
         if (instance == null) {
             commandSender.sendMessage(ChatColor.RED+"Sorry, that game mode does not exist!");
@@ -38,19 +38,19 @@ public class CreateGameInstanceCommand implements CommandExecutor {
 
         commandSender.sendMessage("Creating new "+instance.getMode().getName()+" game...");
 
-        if (GameManager.createGameInstance(instance, startDate)) {
-            commandSender.sendMessage(ChatColor.GREEN+"Successfully created game!");
-            for (Player p: Bukkit.getOnlinePlayers()) {
-                if (startDate == null) {
-                    p.sendMessage(ChatColor.YELLOW+"A "+instance.getMode().getName()+" game is about to start! " +
-                            "Do "+ChatColor.GREEN+"/jg "+instance.getID()+ChatColor.YELLOW+" to reserve a spot!");
-                    //TODO: ONLY GOLD MEMBERS CAN SPECTATE
-                    p.sendMessage(ChatColor.GRAY+"(Do "+ChatColor.BOLD+"/spec "+instance.getID()+ChatColor.RESET+" to spectate)");
-                }
-            }
-        } else {
-            commandSender.sendMessage(ChatColor.RED+"Failed to create game!");
-        }
+//        if (GameManager.createGameInstance(instance)) {
+//            commandSender.sendMessage(ChatColor.GREEN+"Successfully created game!");
+//            for (Player p: Bukkit.getOnlinePlayers()) {
+//                if (startDate == null) {
+//                    p.sendMessage(ChatColor.YELLOW+"A "+instance.getMode().getName()+" game is about to start! " +
+//                            "Do "+ChatColor.GREEN+"/jg "+instance.getID()+ChatColor.YELLOW+" to reserve a spot!");
+//                    //TODO: ONLY GOLD MEMBERS CAN SPECTATE
+//                    p.sendMessage(ChatColor.GRAY+"(Do "+ChatColor.BOLD+"/spec "+instance.getID()+ChatColor.RESET+" to spectate)");
+//                }
+//            }
+//        } else {
+//            commandSender.sendMessage(ChatColor.RED+"Failed to create game!");
+//        }
         return true;
     }
 

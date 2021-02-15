@@ -5,9 +5,9 @@ import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import com.onarandombox.MultiverseCore.utils.FileUtils;
 import commands.CreateGameInstanceCommand;
-import commands.JoinGameInstanceCommand;
-import commands.StartGameInstanceCommand;
+import commands.NextGameCommand;
 import commands.TestCommand;
+import listeners.PlayerChangedWorldListener;
 import listeners.PlayerJoinListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -36,17 +36,19 @@ public class GameManagerPlugin extends JavaPlugin {
                 config.getString("mysql.password"));
 
         DatabaseManager.executeUpdate("create_profiles_table.sql");
+        DatabaseManager.executeUpdate("create_game_instances_table.sql");
+        DatabaseManager.executeUpdate("create_game_registrations_table.sql");
 
         PlayerProfiles.loadPlayerProfiles();
 
         //register commands
         getCommand("test").setExecutor(new TestCommand());
         getCommand("creategame").setExecutor(new CreateGameInstanceCommand());
-        getCommand("joingame").setExecutor(new JoinGameInstanceCommand());
-        getCommand("startgame").setExecutor(new StartGameInstanceCommand());
+        getCommand("next").setExecutor(new NextGameCommand());
 
         //register event listeners
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerChangedWorldListener(), this);
 
         Notifier.init();
 

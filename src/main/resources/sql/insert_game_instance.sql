@@ -1,1 +1,1 @@
-INSERT INTO game_instances (map, name, start_date) VALUES (?, ?, ?)
+INSERT INTO game_instances (map, game_id, start_date) VALUES (?, ?, ?)

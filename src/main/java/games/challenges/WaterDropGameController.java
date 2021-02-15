@@ -1,5 +1,8 @@
-package games;
+package games.challenges;
 
+import games.GameController;
+import games.MinigameMap;
+import games.MinigameMode;
 import main.GameManagerPlugin;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
@@ -15,13 +18,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.awt.*;
 import java.util.Random;
 
-public class WaterDropGameInstance extends GameInstance {
+public class WaterDropGameController extends GameController {
 
     private final Rectangle dropBounds;
     private final int dropHeight, dropInterval, amountPerDrop;
     private final Random random;
 
-    public WaterDropGameInstance() {
+    public WaterDropGameController() {
         super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16);
         this.dropHeight = 129;
         this.dropInterval = 20;
@@ -48,7 +51,7 @@ public class WaterDropGameInstance extends GameInstance {
 
     public void onStart() {
         dropRandomIngots.runTaskTimer(GameManagerPlugin.getInstance(), 0, dropInterval);
-        for (Player p: getActivePlayers()) {
+        for (Player p: getWorld().getPlayers()) {
             addRequiredItems(p);
         }
     }
@@ -74,6 +77,14 @@ public class WaterDropGameInstance extends GameInstance {
 
     public void onFinish() {
         dropRandomIngots.cancel();
+    }
+
+    public void onJoin(Player p) {
+
+    }
+
+    public void onLeave(Player p) {
+
     }
 
     @EventHandler

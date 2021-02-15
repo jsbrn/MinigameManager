@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum MinigameMode {
 
-    PARKOUR_RACE, WATER_DROP, SURVIVAL_GAMES, CROSS_THE_GAP;
+    PARKOUR_RACE, WATER_DROP, SURVIVAL_GAMES, CROSS_THE_GAP, STEAL_THE_GOLD;
 
     public String getName() {
         String[] words = this.toString().split("_");

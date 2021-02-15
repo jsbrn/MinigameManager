@@ -1,0 +1,1 @@
+SELECT * FROM game_registrations WHERE game_id = ?

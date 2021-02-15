@@ -1,0 +1,1 @@
+INSERT IGNORE INTO game_registrations (player_uuid, game_id) VALUES (?, ?)

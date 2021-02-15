@@ -1,1 +1,1 @@
-UPDATE game_instances SET start_date = ? started = ?, finished = ?, cancelled = ?, winner = ?
+UPDATE game_instances SET start_date = ? started = ?, finished = ?, cancelled = ?, winner = ? WHERE game_id = ?
