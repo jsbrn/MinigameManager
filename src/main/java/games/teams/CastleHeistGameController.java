@@ -1,21 +1,18 @@
 package games.teams;
 
-import games.GameController;
 import games.MinigameMap;
 import games.MinigameMode;
 import games.TeamGameController;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import teams.Team;
-import teams.TeamManager;
 
 public class CastleHeistGameController extends TeamGameController {
 
     public CastleHeistGameController() {
-        super(MinigameMode.STEAL_THE_GOLD, MinigameMap.CASTLE_HEIST, 0, Integer.MAX_VALUE);
+        super(MinigameMode.STEAL_THE_GOLD, MinigameMap.CASTLE_HEIST, 0, Integer.MAX_VALUE, GameMode.SURVIVAL);
     }
 
     public void onStart() {

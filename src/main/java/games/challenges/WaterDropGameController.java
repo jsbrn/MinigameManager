@@ -26,7 +26,7 @@ public class WaterDropGameController extends GameController {
     private final Random random;
 
     public WaterDropGameController() {
-        super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16);
+        super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16, GameMode.SURVIVAL);
         this.dropHeight = 129;
         this.dropInterval = 20;
         this.amountPerDrop = 2;
@@ -96,7 +96,7 @@ public class WaterDropGameController extends GameController {
     public void onChestClick(InventoryOpenEvent event) {
         System.out.println("inv opened");
         if (isFinished()) return;
-        if (event.getPlayer().getGameMode() != GameMode.SURVIVAL) return;
+        if (event.getPlayer().getGameMode() != GameMode.ADVENTURE) return;
         if (!event.getPlayer().getLocation().getWorld().equals(getWorld())) return;
         System.out.println("passed requirements");
         if (event.getInventory().getType().equals(InventoryType.CHEST)) {

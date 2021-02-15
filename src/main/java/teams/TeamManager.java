@@ -34,7 +34,8 @@ public final class TeamManager {
         }
 
         public void onRemove(Player p) {
-            p.setGameMode(GameMode.ADVENTURE);
+            if (GameManager.getActiveGame() != null)
+                p.setGameMode(GameManager.getActiveGame().getDefaultGameMode());
         }
     };
 
@@ -61,6 +62,22 @@ public final class TeamManager {
         for (Team t: TEAM_LIST)
             if (t.getID().equals(id)) return t;
         return null;
+    }
+
+    public static Team getSmallestTeam() {
+        int count = Integer.MAX_VALUE;
+        Team smallest = RED_TEAM;
+        for (Team t : TEAM_LIST) {
+            if (t != SPECTATORS_TEAM && t.size() < count) {
+                count = t.size();
+                smallest = t;
+            }
+        }
+        return smallest;
+    }
+
+    public static Team[] getTeamList() {
+        return TEAM_LIST;
     }
 
 }

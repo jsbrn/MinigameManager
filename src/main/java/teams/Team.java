@@ -47,4 +47,8 @@ public abstract class Team {
     public String getID() {
         return id;
     }
+
+    public int size() {
+        return players.size();
+    }
 }

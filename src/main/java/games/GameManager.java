@@ -27,15 +27,18 @@ public class GameManager {
     }
 
     public static void next() {
-        GameController controller = createGameInstance(MinigameMap.CASTLE_HEIST);
-        if (activeGame != null)
+
+        if (activeGame != null) {
             activeGame.finish();
-        activeGame = controller;
-        for (Player p: Bukkit.getOnlinePlayers()) {
-            p.teleport(controller.getWorld().getSpawnLocation());
-            p.sendTitle(ChatColor.YELLOW+""+ChatColor.BOLD+controller.getMap().getFriendlyWorldName(), controller.getMode().getName(), 10, 60, 10);
-            activeGame.onJoin(p);
+            activeGame = null;
+        } else {
+            GameController controller = createGameInstance(MinigameMap.CASTLE_HEIST);
+            activeGame = controller;
+            for (Player p: Bukkit.getOnlinePlayers()) {
+                p.teleport(controller.getWorld().getSpawnLocation());
+            }
         }
+
         // Bukkit.getServer().getPluginManager().registerEvents(gi, GameManagerPlugin.getInstance());
         // gi.start();
     }

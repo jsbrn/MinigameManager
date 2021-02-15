@@ -10,6 +10,8 @@ import commands.NextGameCommand;
 import commands.TestCommand;
 import listeners.PlayerChangedWorldListener;
 import listeners.PlayerJoinListener;
+import listeners.PlayerLeaveListener;
+import listeners.SpectatorCloseInventoryListener;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
@@ -48,10 +50,15 @@ public class GameManagerPlugin extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
         getCommand("creategame").setExecutor(new CreateGameInstanceCommand());
         getCommand("next").setExecutor(new NextGameCommand());
-        getCommand("jointeam").setExecutor(new JoinTeamCommand());
+
+        JoinTeamCommand joinTeamCommand = new JoinTeamCommand();
+        getCommand("jointeam").setExecutor(joinTeamCommand);
+        getCommand("jointeam").setTabCompleter(joinTeamCommand);
 
         //register event listeners
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        getServer().getPluginManager().registerEvents(new PlayerLeaveListener(), this);
+        getServer().getPluginManager().registerEvents(new SpectatorCloseInventoryListener(), this);
         getServer().getPluginManager().registerEvents(new PlayerChangedWorldListener(), this);
 
         Notifier.init();

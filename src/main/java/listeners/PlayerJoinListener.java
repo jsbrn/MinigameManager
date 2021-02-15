@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import profiles.PlayerProfiles;
+import teams.TeamManager;
 
 public class PlayerJoinListener implements Listener {
 
@@ -26,8 +27,7 @@ public class PlayerJoinListener implements Listener {
             Player p = event.getPlayer();
             GameController active = GameManager.getActiveGame();
             p.teleport(active.getWorld().getSpawnLocation());
-            p.setGameMode(GameMode.SPECTATOR);
-            p.sendTitle(ChatColor.YELLOW+""+ChatColor.BOLD+active.getMap().getFriendlyWorldName(), active.getMode().getName(), 10, 60, 10);
+            TeamManager.switchTeam(p, TeamManager.SPECTATORS_TEAM);
             active.onJoin(p);
         }
     }
