@@ -2,7 +2,9 @@ package games;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scoreboard.*;
+import org.bukkit.scoreboard.Scoreboard;
+import teams.*;
+import util.Notifier;
 
 public abstract class TeamGameController extends GameController {
 
@@ -30,8 +32,13 @@ public abstract class TeamGameController extends GameController {
 
     }
 
+    public void onTeamSwitch(Player p, Team to) {
+        Notifier.sendToAllPlayers(p.getDisplayName() + " has switched to team " + to.getName());
+    }
+
     public void onJoin(Player p) {
-        board.getTeam("Red").addEntry(p.getName());
+        Notifier.sendToAllPlayers(p.getDisplayName()+" joined the game");
+        TeamManager.switchTeam(p, TeamManager.SPECTATORS_TEAM);
         p.setScoreboard(board);
     }
 

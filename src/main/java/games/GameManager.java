@@ -28,12 +28,13 @@ public class GameManager {
 
     public static void next() {
         GameController controller = createGameInstance(MinigameMap.CASTLE_HEIST);
+        if (activeGame != null)
+            activeGame.finish();
         activeGame = controller;
         for (Player p: Bukkit.getOnlinePlayers()) {
             p.teleport(controller.getWorld().getSpawnLocation());
-            p.setGameMode(GameMode.SPECTATOR);
             p.sendTitle(ChatColor.YELLOW+""+ChatColor.BOLD+controller.getMap().getFriendlyWorldName(), controller.getMode().getName(), 10, 60, 10);
-            p.sendMessage("The game will start in 5 seconds...");
+            activeGame.onJoin(p);
         }
         // Bukkit.getServer().getPluginManager().registerEvents(gi, GameManagerPlugin.getInstance());
         // gi.start();

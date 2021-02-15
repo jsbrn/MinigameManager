@@ -28,6 +28,12 @@ public class Notifier {
         }
     }
 
+    public static void sendToAllPlayers(String message) {
+        for (Player p: Bukkit.getOnlinePlayers()) {
+            p.sendMessage(message);
+        }
+    }
+
     public static void init() {
         periodicTips.start();
     }

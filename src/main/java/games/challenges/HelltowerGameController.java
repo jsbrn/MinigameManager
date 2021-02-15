@@ -15,6 +15,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import teams.Team;
 
 import java.awt.*;
 
@@ -49,17 +50,6 @@ public class HelltowerGameController extends GameController {
         liftLava.runTaskTimer(GameManagerPlugin.getInstance(), 20*5, 20*5);
     }
 
-    private void createScoreboard() {
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-        Scoreboard board = manager.getNewScoreboard();
-        Objective objective = board.registerNewObjective("stealgold", "dummy");
-        objective.setDisplayName("Steal the Gold");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        objective.getScore("Gold blocks:").setScore(18);
-        for (Player p: getWorld().getPlayers())
-            p.setScoreboard(board);
-    }
-
     public boolean onNext() {
         return false;
     }
@@ -77,6 +67,10 @@ public class HelltowerGameController extends GameController {
     }
 
     public void onLeave(Player p) {
+
+    }
+
+    public void onTeamSwitch(Player p, Team to) {
 
     }
 

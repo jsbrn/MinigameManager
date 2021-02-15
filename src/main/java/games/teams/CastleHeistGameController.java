@@ -4,9 +4,13 @@ import games.GameController;
 import games.MinigameMap;
 import games.MinigameMode;
 import games.TeamGameController;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
+import teams.Team;
+import teams.TeamManager;
 
 public class CastleHeistGameController extends TeamGameController {
 
@@ -26,9 +30,9 @@ public class CastleHeistGameController extends TeamGameController {
 
     }
 
-    public void onJoin(Player p) {
-        super.onJoin(p);
-        p.sendMessage("Joined the game, added a team!");
+    @Override
+    public void onTeamSwitch(Player p, Team to) {
+        super.onTeamSwitch(p, to);
     }
 
     public void onLeave(Player p) {
@@ -36,18 +40,12 @@ public class CastleHeistGameController extends TeamGameController {
     }
 
     public void setupScoreboard(Scoreboard board) {
-        Team red = board.registerNewTeam("Red");
-        Team blu = board.registerNewTeam("Blue");
-        Objective objective = board.registerNewObjective(getMode().getAcronym(), "dummy", ChatColor.YELLOW+""+ChatColor.BOLD+getMode().getName());
+        Objective objective = board.registerNewObjective(getID(), "dummy", ChatColor.YELLOW+""+ChatColor.BOLD+getMode().getName());
         Score redGold = objective.getScore(ChatColor.BOLD+""+ChatColor.RED+"RED's "+ChatColor.GOLD+"Gold:");
         Score bluGold = objective.getScore(ChatColor.BOLD+""+ChatColor.AQUA+"BLUE's "+ChatColor.GOLD+"Gold:");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         redGold.setScore(18);
         bluGold.setScore(18);
-        red.setPrefix(ChatColor.RED+"[RED]"+ChatColor.WHITE);
-        blu.setPrefix(ChatColor.BLUE+"[BLUE]"+ChatColor.WHITE);
-        red.setAllowFriendlyFire(false);
-        blu.setAllowFriendlyFire(false);
     }
 
 }

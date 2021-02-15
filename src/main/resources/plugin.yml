@@ -18,3 +18,7 @@ commands:
     description: Force a new random game.
     usage: /next
     permission: gamemanager.next
+  jointeam:
+    description: Switch teams.
+    usage: /jointeam <teamID>
+    permission: gamemanager.jointeam

@@ -5,11 +5,13 @@ import com.onarandombox.MultiverseCore.api.MVWorldManager;
 import com.onarandombox.MultiverseCore.api.MultiverseWorld;
 import com.onarandombox.MultiverseCore.utils.FileUtils;
 import commands.CreateGameInstanceCommand;
+import commands.JoinTeamCommand;
 import commands.NextGameCommand;
 import commands.TestCommand;
 import listeners.PlayerChangedWorldListener;
 import listeners.PlayerJoinListener;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.DatabaseManager;
@@ -18,6 +20,7 @@ import util.Notifier;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.EventListener;
 
 public class GameManagerPlugin extends JavaPlugin {
 
@@ -45,6 +48,7 @@ public class GameManagerPlugin extends JavaPlugin {
         getCommand("test").setExecutor(new TestCommand());
         getCommand("creategame").setExecutor(new CreateGameInstanceCommand());
         getCommand("next").setExecutor(new NextGameCommand());
+        getCommand("jointeam").setExecutor(new JoinTeamCommand());
 
         //register event listeners
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), this);

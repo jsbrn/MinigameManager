@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import teams.Team;
 
 import java.awt.*;
 import java.util.Random;
@@ -84,6 +85,10 @@ public class WaterDropGameController extends GameController {
     }
 
     public void onLeave(Player p) {
+
+    }
+
+    public void onTeamSwitch(Player p, Team to) {
 
     }
 

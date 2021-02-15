@@ -3,17 +3,15 @@ package games;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.scoreboard.ScoreboardManager;
+import teams.Team;
 import util.BukkitTimerTask;
-import util.DatabaseManager;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.sql.Date;
 import java.util.Random;
-import java.util.UUID;
 
 public abstract class GameController implements Listener {
 
@@ -35,7 +33,7 @@ public abstract class GameController implements Listener {
         this.maximumPlayerCount = maxPlayers;
     }
 
-    public void start() {
+    public final void start() {
 
         ScoreboardManager manager = Bukkit.getScoreboardManager();
 
@@ -45,24 +43,25 @@ public abstract class GameController implements Listener {
 
     }
 
-    public void stop() {
+    public final void stop() {
         cancelled = true;
         onStop();
         save();
     }
 
-    public void next() {
+    public final void next() {
         stage++;
         onNext();
         save();
     }
 
-    public MinigameMode getMode() {
+    public final MinigameMode getMode() {
         return mode;
     }
 
-    public void finish() {
+    public final void finish() {
         finished = true;
+        HandlerList.unregisterAll(this);
         onFinish();
         BukkitTimerTask nextGame = new BukkitTimerTask(6000, 0, 1) {
             @Override
@@ -82,6 +81,8 @@ public abstract class GameController implements Listener {
     public abstract void onJoin(Player p);
     public abstract void onLeave(Player p);
 
+    public abstract void onTeamSwitch(Player p, Team to);
+
     public final String getWorldName() {
         return "game_"+ id;
     }
@@ -96,7 +97,7 @@ public abstract class GameController implements Listener {
 
     public MinigameMap getMap() { return map; }
 
-    public boolean isFinished() {
+    public final boolean isFinished() {
         return finished;
     }
 
