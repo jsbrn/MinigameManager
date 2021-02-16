@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import teams.Team;
 import util.BukkitTimerTask;
@@ -19,16 +20,19 @@ import java.util.Random;
 public abstract class GameController implements Listener {
 
     private String id;
-    private int minimumPlayerCount, maximumPlayerCount;
+    private int minimumPlayerCount, maximumPlayerCount, secondsRemaining;
+    private BukkitTimerTask timerCountdown;
     private GameMode defaultGameMode;
     private boolean started, finished, cancelled;
 
     private MinigameMode mode;
     private MinigameMap map;
 
+    private Scoreboard board;
+
     private int stage = 0;
 
-    protected GameController(MinigameMode mode, MinigameMap map, int minPlayers, int maxPlayers, GameMode defaultMode) {
+    protected GameController(MinigameMode mode, MinigameMap map, int minPlayers, int maxPlayers, final int timeLimitSeconds, GameMode defaultMode) {
         Random r = new Random();
         this.mode = mode;
         this.map = map;
@@ -36,16 +40,28 @@ public abstract class GameController implements Listener {
         this.id = mode.getAcronym().toUpperCase()+(100+r.nextInt(900));
         this.minimumPlayerCount = minPlayers;
         this.maximumPlayerCount = maxPlayers;
+        this.secondsRemaining = timeLimitSeconds;
+        this.board = Bukkit.getScoreboardManager().getMainScoreboard();
+        final GameController that = this;
+        this.timerCountdown = new BukkitTimerTask(0, 1000) {
+            @Override
+            protected void run() {
+                if (!Bukkit.getOnlinePlayers().isEmpty()) secondsRemaining--;
+                that.onTimeChange(secondsRemaining);
+                if (secondsRemaining == 0) {
+                    this.stop();
+                    that.finish();
+                }
+            }
+        };
+        setupScoreboard(board);
     }
 
     public final void start() {
-
-        ScoreboardManager manager = Bukkit.getScoreboardManager();
-
         started = true;
+        this.timerCountdown.start();
         onStart();
         save();
-
     }
 
     public final void stop() {
@@ -68,10 +84,16 @@ public abstract class GameController implements Listener {
         finished = true;
         HandlerList.unregisterAll(this);
         onFinish();
-        BukkitTimerTask nextCountdown = new BukkitTimerTask(6000, 0, 1) {
+        //10 second delay for win message, then 10 second countdown to next game
+        BukkitTimerTask nextCountdown = new BukkitTimerTask(10000, 1000, 11) {
             @Override
-            protected void run() {
-                GameManager.next();
+            protected void run()
+            {
+                if (getRunCount() < 10) {
+                    Notifier.sendToAllPlayers(ChatColor.YELLOW+"Next game in "+(10-getRunCount())+"...");
+                } else {
+                    GameManager.next();
+                }
             }
         };
         nextCountdown.start();
@@ -83,16 +105,23 @@ public abstract class GameController implements Listener {
     public abstract void onStop(); //things to do when the game is cancelled
     public abstract void onFinish(); //things to do when the game finishes
 
+    public abstract void onTimeChange(int secondsRemaining);
+
     public abstract void onDeath(Player p);
     public abstract void respawn(Player p);
+    public abstract void setupScoreboard(Scoreboard board);
 
     public void onJoin(Player p) {
         Notifier.sendToAllPlayers(ChatColor.GREEN+p.getDisplayName()+" joined the match");
         p.sendTitle(ChatColor.YELLOW+""+ChatColor.BOLD+getMap().getFriendlyWorldName(), getMode().getName(), 10, 60, 10);
     }
-    public abstract void onLeave(Player p);
 
+    public abstract void onLeave(Player p);
     public abstract void onTeamSwitch(Player p, Team to);
+
+    public Scoreboard getScoreboard() {
+        return board;
+    }
 
     public final String getWorldName() {
         return "game_"+ id;

@@ -2,8 +2,6 @@ package games;
 
 import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Scoreboard;
 import teams.*;
 import util.BukkitTimerTask;
 import util.Notifier;
@@ -12,13 +10,11 @@ import java.util.HashMap;
 
 public abstract class TeamGameController extends GameController {
 
-    private Scoreboard board;
     private HashMap<Team, Location> spawns;
 
-    protected TeamGameController(MinigameMode mode, MinigameMap map, int minPlayers, int maxPlayers, GameMode defaultMode) {
-        super(mode, map, minPlayers, maxPlayers, defaultMode);
-        board = Bukkit.getScoreboardManager().getMainScoreboard();
-        setupScoreboard(board);
+    protected TeamGameController(MinigameMode mode, MinigameMap map, int minPlayers, int maxPlayers, int timeLimitSeconds, GameMode defaultMode) {
+        super(mode, map, minPlayers, maxPlayers, timeLimitSeconds, defaultMode);
+        spawns = new HashMap<Team, Location>();
     }
 
     public void onStart() {
@@ -37,8 +33,26 @@ public abstract class TeamGameController extends GameController {
 
     }
 
+    @Override
+    public void onTimeChange(int secondsRemaining) {
+        Notifier.sendToAllPlayers(secondsRemaining+" seconds remaining!");
+    }
+
     public final void setSpawn(Team t, Location l) {
         spawns.put(t, l);
+    }
+
+    public final Location getSpawn(Team t) {
+        Location loc = spawns.get(t);
+        if (loc != null)
+            //need to set world at this stage because when controller is initiated, world does not exist
+            loc.setWorld(getWorld());
+        return loc;
+    }
+
+    @Override
+    public void onDeath(Player p) {
+
     }
 
     public void onTeamSwitch(Player p, Team to) {
@@ -48,9 +62,9 @@ public abstract class TeamGameController extends GameController {
 
     @Override
     public void respawn(Player p) {
-        p.teleport(spawns.get(TeamManager.getTeam(p)));
+        Location spawn = getSpawn(TeamManager.getTeam(p));
+        if (spawn != null) p.teleport(spawn);
         p.setHealth(20); //full health
-        p.getInventory().addItem(new ItemStack(Material.SPRUCE_WOOD, 64));
     }
 
     public void onJoin(final Player p) {
@@ -62,14 +76,12 @@ public abstract class TeamGameController extends GameController {
             }
         };
         showTeamSwitcher.start();
-        p.setScoreboard(board);
+        p.setScoreboard(getScoreboard());
     }
 
     public void onLeave(Player p) {
         //Notifier.sendToAllPlayers(ChatColor.YELLOW+p.getDisplayName()+" left the match");
         p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
-
-    public abstract void setupScoreboard(Scoreboard board);
 
 }

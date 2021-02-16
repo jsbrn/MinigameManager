@@ -1,14 +1,14 @@
 package teams;
 
 import games.GameManager;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.Nullable;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 public final class TeamManager {
 
-    public static Team RED_TEAM = new Team("Red", "red", ChatColor.RED) {
+    public static Team RED_TEAM = new Team("Red", "red", ChatColor.RED, Color.RED) {
         public void onAdd(Player p) {
 
         }
@@ -18,7 +18,7 @@ public final class TeamManager {
         }
     };
 
-    public static Team BLUE_TEAM = new Team("Blue", "blue", ChatColor.AQUA) {
+    public static Team BLUE_TEAM = new Team("Blue", "blue", ChatColor.AQUA, Color.AQUA) {
         public void onAdd(Player p) {
 
         }
@@ -28,7 +28,7 @@ public final class TeamManager {
         }
     };
 
-    public static Team SPECTATORS_TEAM = new Team("Spectators", "spectators", ChatColor.GRAY) {
+    public static Team SPECTATORS_TEAM = new Team("Spectators", "spectators", ChatColor.GRAY, Color.GRAY) {
         public void onAdd(Player p) {
             p.setGameMode(GameMode.SPECTATOR);
         }
@@ -45,9 +45,15 @@ public final class TeamManager {
             SPECTATORS_TEAM
     };
 
-    public static void switchTeam(Player p, Team to) {
+    public static void switchTeam(Player p, Team to, String reason, boolean verbose) {
         for (Team t: TEAM_LIST) t.removePlayer(p);
         to.addPlayer(p);
+        if (verbose) {
+            if (to.equals(TeamManager.SPECTATORS_TEAM))
+                p.sendTitle(ChatColor.GRAY+"Now Spectating", "Type "+ChatColor.YELLOW+"/jointeam "+ChatColor.BOLD+""+ChatColor.RED+"red"+ChatColor.GRAY+""+ChatColor.RESET+" or "+ChatColor.BOLD+""+ChatColor.AQUA+"blue"+ChatColor.RESET+""+ChatColor.WHITE+" to play.", 10, 80, 10);
+            else
+                p.sendTitle(to.getChatColor()+"Team "+to.getName(), reason != null ? reason : "", 10, 80, 10);
+        }
         if (GameManager.getActiveGame() != null)
             GameManager.getActiveGame().onTeamSwitch(p, to);
     }
@@ -78,6 +84,23 @@ public final class TeamManager {
 
     public static Team[] getTeamList() {
         return TEAM_LIST;
+    }
+
+    /**
+     * This plugin uses the default teams to apply collision and visibility rules natively.
+     * TeamManager is essentially a wrapper for the built in teams functionality.
+     */
+    private static boolean initialized = false;
+    public static void initMinecraftTeams() {
+        if (initialized) return;
+        for (Team t: TEAM_LIST) {
+            Bukkit.getLogger().info("Setting up vanilla team "+t.getName()+" (id: "+t.getID()+")");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team remove "+t.getID());
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team add "+t.getID()+" \""+t.getName()+"\"");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team modify "+t.getID()+" friendlyFire false");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "team modify "+t.getID()+" collisionRule pushOtherTeams");
+        }
+        initialized = true;
     }
 
 }

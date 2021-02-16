@@ -56,6 +56,10 @@ public abstract class BukkitTimerTask {
         }
     }
 
+    public int getRunCount() {
+        return runCount;
+    }
+
     protected abstract void run();
 
     public final void stop() {

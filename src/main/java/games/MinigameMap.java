@@ -2,7 +2,7 @@ package games;
 
 import games.challenges.HelltowerGameController;
 import games.challenges.WaterDropGameController;
-import games.teams.CastleHeistGameController;
+import games.team.CastleHeistGameController;
 
 import java.util.Random;
 

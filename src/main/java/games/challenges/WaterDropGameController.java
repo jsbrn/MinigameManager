@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 import teams.Team;
 
 import java.awt.*;
@@ -26,7 +27,7 @@ public class WaterDropGameController extends GameController {
     private final Random random;
 
     public WaterDropGameController() {
-        super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16, GameMode.SURVIVAL);
+        super(MinigameMode.WATER_DROP, MinigameMap.WATER_DROP, 5, 16, 0, GameMode.SURVIVAL);
         this.dropHeight = 129;
         this.dropInterval = 20;
         this.amountPerDrop = 2;
@@ -78,6 +79,22 @@ public class WaterDropGameController extends GameController {
 
     public void onFinish() {
         dropRandomIngots.cancel();
+    }
+
+    public void onTimeChange(int secondsRemaining) {
+
+    }
+
+    public void onDeath(Player p) {
+
+    }
+
+    public void respawn(Player p) {
+
+    }
+
+    public void setupScoreboard(Scoreboard board) {
+
     }
 
     public void onJoin(Player p) {

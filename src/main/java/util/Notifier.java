@@ -2,6 +2,7 @@ package util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
 import java.util.Random;
@@ -31,6 +32,18 @@ public class Notifier {
     public static void sendToAllPlayers(String message) {
         for (Player p: Bukkit.getOnlinePlayers()) {
             p.sendMessage(message);
+        }
+    }
+
+    public static void showToAllPlayers(String title, String subtitle) {
+        for (Player p: Bukkit.getOnlinePlayers()) {
+            p.sendTitle(title, subtitle, 10, 70, 20);
+        }
+    }
+
+    public static void playForAllPlayers(Sound sound) {
+        for (Player p: Bukkit.getOnlinePlayers()) {
+            p.playSound(p.getLocation(), sound, 1.0f, 0f);
         }
     }
 

@@ -12,10 +12,12 @@ import listeners.PlayerChangedWorldListener;
 import listeners.PlayerJoinListener;
 import listeners.PlayerLeaveListener;
 import listeners.SpectatorCloseInventoryListener;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import teams.TeamManager;
 import util.DatabaseManager;
 import profiles.PlayerProfiles;
 import util.Notifier;
@@ -68,6 +70,12 @@ public class GameManagerPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         DatabaseManager.disconnect();
+        deleteOldWorlds();
+    }
+
+    public void deleteOldWorlds() {
+
+        Bukkit.getLogger().info("Deleting old worlds...");
 
         MVWorldManager worldManager = JavaPlugin.getPlugin(MultiverseCore.class).getMVWorldManager();
         File root = new File(System.getProperty("user.dir"));
@@ -89,10 +97,9 @@ public class GameManagerPlugin extends JavaPlugin {
                 }
             }
         }
-
     }
 
-    public static Plugin getInstance() {
+    public static GameManagerPlugin getInstance() {
         return JavaPlugin.getPlugin(GameManagerPlugin.class);
     }
 

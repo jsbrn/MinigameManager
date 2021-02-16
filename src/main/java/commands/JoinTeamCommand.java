@@ -23,9 +23,7 @@ public class JoinTeamCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.RED+"Team '"+args[0]+"' does not exist!");
             return true;
         }
-        TeamManager.switchTeam((Player)sender, to);
-        if (to.equals(TeamManager.SPECTATORS_TEAM))
-            ((Player)sender).sendTitle(ChatColor.GRAY+"Now Spectating", "Type "+ChatColor.YELLOW+"/jointeam "+ChatColor.BOLD+""+ChatColor.RED+"red"+ChatColor.GRAY+""+ChatColor.RESET+" or "+ChatColor.BOLD+""+ChatColor.AQUA+"blue"+ChatColor.RESET+""+ChatColor.WHITE+" to play.", 10, 80, 10);
+        TeamManager.switchTeam((Player)sender, to, null, true);
         return true;
     }
 

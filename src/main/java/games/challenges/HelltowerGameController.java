@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scoreboard.Scoreboard;
 import teams.Team;
 
 import java.awt.*;
@@ -22,7 +23,7 @@ public class HelltowerGameController extends GameController {
     private final int maxLavaHeight;
 
     public HelltowerGameController() {
-        super(MinigameMode.PARKOUR_RACE, MinigameMap.HELL_TOWER, 2, 16, GameMode.ADVENTURE);
+        super(MinigameMode.PARKOUR_RACE, MinigameMap.HELL_TOWER, 2, 16, 0, GameMode.ADVENTURE);
         this.lavaBounds = new Rectangle(-6, -6, 13, 13);
         this.lavaHeight = 64;
         this.maxLavaHeight = 104;
@@ -56,6 +57,22 @@ public class HelltowerGameController extends GameController {
 
     public void onFinish() {
         liftLava.cancel();
+    }
+
+    public void onTimeChange(int secondsRemaining) {
+
+    }
+
+    public void onDeath(Player p) {
+
+    }
+
+    public void respawn(Player p) {
+
+    }
+
+    public void setupScoreboard(Scoreboard board) {
+
     }
 
     public void onJoin(Player p) {
