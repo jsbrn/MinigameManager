@@ -13,6 +13,8 @@ public abstract class BukkitTimerTask {
     private long startTime, lastRun;
     private int millsDelay, millsPeriod, runCount, maxRuns, perXTicks;
 
+    private boolean started;
+
     public BukkitTimerTask(int millsDelay, int millsPeriod) {
         this(millsDelay, millsPeriod, Integer.MAX_VALUE);
     }
@@ -40,6 +42,7 @@ public abstract class BukkitTimerTask {
         this.lastRun = 0;
         this.runCount = 0;
         this.runnable.runTaskTimer(GameManagerPlugin.getInstance(), 0, perXTicks);
+        this.started = true;
     }
 
     private void checkTime() {
@@ -63,7 +66,10 @@ public abstract class BukkitTimerTask {
     protected abstract void run();
 
     public final void stop() {
-        this.runnable.cancel();
+        if (started) {
+            this.runnable.cancel();
+            this.started = false;
+        }
     }
 
 }

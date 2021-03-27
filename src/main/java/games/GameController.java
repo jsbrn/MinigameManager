@@ -1,14 +1,14 @@
 package games;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.World;
+import org.bukkit.*;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import teams.Team;
 import util.BukkitTimerTask;
 import util.Notifier;
@@ -29,6 +29,8 @@ public abstract class GameController implements Listener {
     private MinigameMap map;
 
     private Scoreboard board;
+    private BossBar bossBar;
+    private String bossBarTitle;
 
     private int stage = 0;
 
@@ -41,32 +43,41 @@ public abstract class GameController implements Listener {
         this.minimumPlayerCount = minPlayers;
         this.maximumPlayerCount = maxPlayers;
         this.secondsRemaining = timeLimitSeconds;
-        this.board = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.board = Bukkit.getScoreboardManager().getNewScoreboard();
         final GameController that = this;
         this.timerCountdown = new BukkitTimerTask(0, 1000) {
             @Override
             protected void run() {
                 if (!Bukkit.getOnlinePlayers().isEmpty()) secondsRemaining--;
                 that.onTimeChange(secondsRemaining);
+                refreshBossBar();
                 if (secondsRemaining == 0) {
                     this.stop();
                     that.finish();
                 }
             }
         };
+        this.bossBar = Bukkit.getServer().createBossBar(ChatColor.BOLD+""+ChatColor.YELLOW+map.getFriendlyWorldName(), BarColor.WHITE, BarStyle.SOLID);
+        this.bossBar.setVisible(true);
+        this.bossBar.setProgress(0f);
         setupScoreboard(board);
     }
 
     public final void start() {
         started = true;
-        this.timerCountdown.start();
+        if (secondsRemaining > 0)
+            this.timerCountdown.start();
         onStart();
         save();
     }
 
     public final void stop() {
         cancelled = true;
-        onStop();
+        for (Objective b: board.getObjectives()) b.unregister();
+        bossBar.removeAll();
+        HandlerList.unregisterAll(this);
+        timerCountdown.stop();
+        onCancel();
         save();
     }
 
@@ -82,17 +93,19 @@ public abstract class GameController implements Listener {
 
     public final void finish() {
         finished = true;
-        HandlerList.unregisterAll(this);
         onFinish();
+        Notifier.playForAllPlayers(Sound.UI_TOAST_CHALLENGE_COMPLETE);
         //10 second delay for win message, then 10 second countdown to next game
         BukkitTimerTask nextCountdown = new BukkitTimerTask(10000, 1000, 11) {
             @Override
             protected void run()
             {
                 if (getRunCount() < 10) {
-                    Notifier.sendToAllPlayers(ChatColor.YELLOW+"Next game in "+(10-getRunCount())+"...");
+                    Notifier.showToAllPlayers(ChatColor.YELLOW+"Next game in "+ChatColor.RED+(10-getRunCount())+ChatColor.YELLOW+"...", "");
+                    if (getRunCount() >= 5) Notifier.playForAllPlayers(Sound.BLOCK_STONE_BUTTON_CLICK_ON);
                 } else {
                     GameManager.next();
+                    Notifier.playForAllPlayers(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
                 }
             }
         };
@@ -102,7 +115,7 @@ public abstract class GameController implements Listener {
 
     public abstract void onStart(); //things to do when the game starts
     public abstract boolean onNext(); //advance the game stage
-    public abstract void onStop(); //things to do when the game is cancelled
+    public abstract void onCancel(); //things to do when the game is cancelled
     public abstract void onFinish(); //things to do when the game finishes
 
     public abstract void onTimeChange(int secondsRemaining);
@@ -114,9 +127,16 @@ public abstract class GameController implements Listener {
     public void onJoin(Player p) {
         Notifier.sendToAllPlayers(ChatColor.GREEN+p.getDisplayName()+" joined the match");
         p.sendTitle(ChatColor.YELLOW+""+ChatColor.BOLD+getMap().getFriendlyWorldName(), getMode().getName(), 10, 60, 10);
+        p.setScoreboard(getScoreboard());
+        bossBar.addPlayer(p);
     }
 
-    public abstract void onLeave(Player p);
+    public void onLeave(Player p) {
+        //Notifier.sendToAllPlayers(ChatColor.YELLOW+p.getDisplayName()+" left the match");
+        p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
+        bossBar.removePlayer(p);
+    }
+
     public abstract void onTeamSwitch(Player p, Team to);
 
     public Scoreboard getScoreboard() {
@@ -129,6 +149,30 @@ public abstract class GameController implements Listener {
 
     public final World getWorld() {
         return Bukkit.getWorld(getWorldName());
+    }
+
+    public final void setBossBar(BarColor color, double progress, String text) {
+        bossBar.setColor(color);
+        bossBar.setProgress(progress);
+        bossBarTitle = text;
+        refreshBossBar();
+    }
+
+    private void refreshBossBar() {
+        String timeRemaining = ChatColor.BOLD+""+ChatColor.WHITE+getFriendlyTimeRemaining()+ChatColor.WHITE+""+ChatColor.RESET+" remaining";
+        if (bossBarTitle == null || bossBarTitle.trim().length() == 0) {
+            bossBar.setTitle(timeRemaining);
+        } else {
+            bossBar.setTitle(bossBarTitle+ChatColor.WHITE+" ("+timeRemaining+")");
+        }
+    }
+
+    private String getFriendlyTimeRemaining() {
+        int minutes = secondsRemaining / 60;
+        int seconds = secondsRemaining % 60;
+        String mm = minutes == 0 ? "00" : minutes+"";
+        String ss = seconds < 10 ? "0"+seconds : seconds+"";
+        return mm+":"+ss;
     }
 
     public final String getID() {

@@ -25,7 +25,7 @@ public abstract class TeamGameController extends GameController {
         return false;
     }
 
-    public void onStop() {
+    public void onCancel() {
 
     }
 
@@ -76,12 +76,6 @@ public abstract class TeamGameController extends GameController {
             }
         };
         showTeamSwitcher.start();
-        p.setScoreboard(getScoreboard());
-    }
-
-    public void onLeave(Player p) {
-        //Notifier.sendToAllPlayers(ChatColor.YELLOW+p.getDisplayName()+" left the match");
-        p.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
     }
 
 }

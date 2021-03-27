@@ -14,7 +14,7 @@ import teams.TeamManager;
 public class CastleHeistGameController extends TeamGameController {
 
     public CastleHeistGameController() {
-        super(MinigameMode.STEAL_THE_GOLD, MinigameMap.CASTLE_HEIST, 0, Integer.MAX_VALUE, 20, GameMode.SURVIVAL);
+        super(MinigameMode.STEAL_THE_GOLD, MinigameMap.CASTLE_HEIST, 0, Integer.MAX_VALUE, 5, GameMode.SURVIVAL);
         setSpawn(TeamManager.BLUE_TEAM, new Location(null, -48, 71, 0.5, -90, 0));
         setSpawn(TeamManager.RED_TEAM, new Location(null, 49, 71, 0.5, 90, 0));
     }
@@ -27,7 +27,7 @@ public class CastleHeistGameController extends TeamGameController {
         return false;
     }
 
-    public void onStop() {
+    public void onCancel() {
 
     }
 

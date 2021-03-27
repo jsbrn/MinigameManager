@@ -41,9 +41,15 @@ public class Notifier {
         }
     }
 
+    public static void showToAllPlayers(String actionBar) {
+        for (Player p: Bukkit.getOnlinePlayers()) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "title "+p.getName()+" actionbar \""+(ChatColor.RED+""+4)+"\"");
+        }
+    }
+
     public static void playForAllPlayers(Sound sound) {
         for (Player p: Bukkit.getOnlinePlayers()) {
-            p.playSound(p.getLocation(), sound, 1.0f, 0f);
+            p.playSound(p.getLocation(), sound, 1.0f, 1.0f);
         }
     }
 

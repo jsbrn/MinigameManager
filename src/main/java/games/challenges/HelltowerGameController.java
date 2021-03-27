@@ -51,7 +51,7 @@ public class HelltowerGameController extends GameController {
         return false;
     }
 
-    public void onStop() {
+    public void onCancel() {
         liftLava.cancel();
     }
 

@@ -49,6 +49,7 @@ public final class TeamManager {
         for (Team t: TEAM_LIST) t.removePlayer(p);
         to.addPlayer(p);
         if (verbose) {
+            p.playSound(p.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_TWINKLE, 1.0f, 1.0f);
             if (to.equals(TeamManager.SPECTATORS_TEAM))
                 p.sendTitle(ChatColor.GRAY+"Now Spectating", "Type "+ChatColor.YELLOW+"/jointeam "+ChatColor.BOLD+""+ChatColor.RED+"red"+ChatColor.GRAY+""+ChatColor.RESET+" or "+ChatColor.BOLD+""+ChatColor.AQUA+"blue"+ChatColor.RESET+""+ChatColor.WHITE+" to play.", 10, 80, 10);
             else

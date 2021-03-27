@@ -6,6 +6,7 @@ import main.GameManagerPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import util.BukkitTimerTask;
@@ -37,7 +38,10 @@ public class GameManager {
             gamesSinceLastCleanse = 0;
         }
 
-        if (activeGame != null) activeGame = null;
+        if (activeGame != null) {
+            activeGame.stop();
+            activeGame = null;
+        }
 
         MinigameMap map = MinigameMap.CASTLE_HEIST;
         final GameController controller = createGameInstance(map);
@@ -51,9 +55,12 @@ public class GameManager {
             @Override
             protected void run() {
                 if (getRunCount() < 10) {
-                    Notifier.sendToAllPlayers(ChatColor.GREEN + "Starting in " + (10 - getRunCount()) + "...");
+                    Notifier.showToAllPlayers(ChatColor.GREEN + "Starting in " + ChatColor.YELLOW + (10 - getRunCount()) + ChatColor.GREEN + "...", "");
+                    if (getRunCount() >= 5) Notifier.playForAllPlayers(Sound.BLOCK_STONE_BUTTON_CLICK_ON);
                 } else {
-                    Notifier.sendToAllPlayers(ChatColor.GREEN + "Good luck!");
+                    Notifier.showToAllPlayers(ChatColor.YELLOW + "Good luck!", controller.getMode().getName());
+                    Notifier.playForAllPlayers(Sound.ENTITY_EXPERIENCE_ORB_PICKUP);
+                    Notifier.playForAllPlayers(Sound.ENTITY_COW_DEATH);
                     controller.start();
                 }
             }

@@ -73,7 +73,7 @@ public class WaterDropGameController extends GameController {
         return false;
     }
 
-    public void onStop() {
+    public void onCancel() {
         dropRandomIngots.cancel();
     }
 
